@@ -1,0 +1,31 @@
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+import joblib
+import os
+
+# 1. Setup absolute paths
+current_dir = os.path.dirname(__file__)
+dataset_path = os.path.join(current_dir, 'data', 'crop_data.csv') # Updated to your 'data' subfolder
+model_dir = os.path.join(current_dir, '..', '..', '..', '..', '..', 'resources', 'ml')
+model_path = os.path.join(model_dir, 'crop_model.pkl')
+
+# 2. Create the model directory if it doesn't exist
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+
+# 3. Load dataset with error handling for Line 7
+# 'on_bad_lines' skips the broken row so the script keeps running
+data = pd.read_csv(dataset_path, on_bad_lines='skip')
+
+X = data[['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']]
+y = data['crop']
+
+# 4. Train model
+model = RandomForestClassifier(n_estimators=200, max_depth=12)
+model.fit(X, y)
+
+# 5. Save model
+joblib.dump(model, model_path)
+
+print(f" Success! Model trained on {len(data)} rows.")
+print(f" Saved to: {os.path.abspath(model_path)}")

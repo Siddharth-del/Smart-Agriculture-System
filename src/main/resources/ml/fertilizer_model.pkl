@@ -1,0 +1,39 @@
+# train_fertilizer_model.py
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.preprocessing import LabelEncoder
+import pickle
+
+# Load dataset
+df = pd.read_csv('fertilizer_data.csv')
+
+# Encode categorical variables
+le_soil = LabelEncoder()
+le_crop = LabelEncoder()
+
+df['Soil Type'] = le_soil.fit_transform(df['Soil Type'])
+df['Crop Type'] = le_crop.fit_transform(df['Crop Type'])
+
+# Features and target
+X = df[['Nitrogen', 'Phosphorous', 'Potassium', 'Soil Type', 'Crop Type']]
+y = df['Fertilizer Name']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = GradientBoostingClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Evaluate
+accuracy = model.score(X_test, y_test)
+print(f"Fertilizer Model Accuracy: {accuracy:.2f}")
+
+# Save model and encoders
+with open('fertilizer_model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+with open('soil_encoder.pkl', 'wb') as f:
+    pickle.dump(le_soil, f)
+with open('crop_encoder.pkl', 'wb') as f:
+    pickle.dump(le_crop, f)
