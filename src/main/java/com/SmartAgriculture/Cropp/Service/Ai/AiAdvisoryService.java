@@ -4,13 +4,6 @@ import com.SmartAgriculture.Cropp.dtos.AdvisoryResponse;
 import com.SmartAgriculture.Cropp.model.SensorData;
 
 public interface AiAdvisoryService {
-
-    AdvisoryResponse generateCropAdvisory(
-            String cropName,
-            SensorData sensorData
-    );
-
-    AdvisoryResponse generateDiseaseAdvisory(
-            String diseaseName
-    );
+        AdvisoryResponse generateCropAdvisory(  String cropName,SensorData sensorData);
+        AdvisoryResponse generateDiseaseAdvisory(String diseaseName);
 }

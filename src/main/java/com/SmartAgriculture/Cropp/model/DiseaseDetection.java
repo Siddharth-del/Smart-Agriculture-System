@@ -15,29 +15,47 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-@AllArgsConstructor
+import lombok.Setter;
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "disease_detection")
 public class DiseaseDetection {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long diseaseId;
-    
+
     @Column(nullable = false)
     private String imagePath;
+
+    @Column(nullable = false)
     private String predictedDisease;
+
+    @Column(nullable = false)
+    private Double confidenceScore;
+
+    @Column(columnDefinition = "TEXT")
     private String pesticideRecommendation;
+
+    @Column(columnDefinition = "TEXT")
     private String fertilizerSuggestion;
+
+    @Column(columnDefinition = "TEXT")
     private String explanation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

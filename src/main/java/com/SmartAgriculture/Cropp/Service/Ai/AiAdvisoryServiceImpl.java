@@ -1,11 +1,12 @@
 package com.SmartAgriculture.Cropp.Service.Ai;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.SmartAgriculture.Cropp.dtos.AdvisoryResponse;
 import com.SmartAgriculture.Cropp.model.SensorData;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,65 +15,63 @@ import lombok.RequiredArgsConstructor;
 public class AiAdvisoryServiceImpl implements AiAdvisoryService {
 
     private final ChatClient chatClient;
-    private final ObjectMapper objectMapper;
 
     @Override
     public AdvisoryResponse generateDiseaseAdvisory(String diseaseName) {
 
+        String safeDisease = sanitize(diseaseName);
+
         String prompt = """
-        You are an agricultural expert.
+                You are a certified agronomist providing practical, field-level advice to Indian farmers.
 
-        Provide:
-        - fertilizerRecommendation
-        - pesticideRecommendation
-        - explanation
+                Disease: %s
 
-        Disease: %s
+                Provide:
+                - fertilizerRecommendation (specific product or nutrient focus)
+                - pesticideRecommendation (specific active ingredient)
+                - explanation (clear and practical)
 
-        Return strictly in JSON:
-        {
-          "fertilizerRecommendation": "",
-          "pesticideRecommendation": "",
-          "explanation": ""
-        }
-        """.formatted(diseaseName);
+                Respond ONLY in valid JSON matching this structure:
+                {
+                  "fertilizerRecommendation": "",
+                  "pesticideRecommendation": "",
+                  "explanation": ""
+                }
+                """.formatted(safeDisease);
 
-        String response = chatClient.prompt()
-                .user(prompt)
-                .call()
-                .content();
-
-        return parseJson(response);
+        return callAi(prompt);
     }
 
     @Override
     public AdvisoryResponse generateCropAdvisory(String cropName,
                                                  SensorData sensorData) {
 
+        String safeCrop = sanitize(cropName);
+
         String prompt = """
-        You are an agricultural expert.
+                You are a certified agronomist providing practical, field-level advice to Indian farmers.
 
-        Crop: %s
-        Temperature: %s
-        Humidity: %s
-        Nitrogen: %s
-        Phosphorus: %s
-        Potassium: %s
-        Soil Moisture: %s
+                Crop: %s
+                Temperature: %.2f °C
+                Humidity: %.2f %%
+                Nitrogen: %.2f
+                Phosphorus: %.2f
+                Potassium: %.2f
+                Soil Moisture: %.2f
 
-        Provide:
-        - fertilizerRecommendation
-        - pesticideRecommendation
-        - explanation
+                Provide:
+                - fertilizerRecommendation (specific product or nutrient focus)
+                - pesticideRecommendation (if preventive needed)
+                - explanation (clear and practical)
 
-        Return strictly in JSON:
-        {
-          "fertilizerRecommendation": "",
-          "pesticideRecommendation": "",
-          "explanation": ""
-        }
-        """.formatted(
-                cropName,
+                Respond ONLY in valid JSON matching this structure:
+                {
+                  "fertilizerRecommendation": "",
+                  "pesticideRecommendation": "",
+                  "explanation": ""
+                }
+                """.formatted(
+                safeCrop,
                 sensorData.getTemperature(),
                 sensorData.getHumidity(),
                 sensorData.getNitrogen(),
@@ -81,19 +80,27 @@ public class AiAdvisoryServiceImpl implements AiAdvisoryService {
                 sensorData.getSoilMoisture()
         );
 
-        String response = chatClient.prompt()
-                .user(prompt)
-                .call()
-                .content();
-
-        return parseJson(response);
+        return callAi(prompt);
     }
 
-    private AdvisoryResponse parseJson(String response) {
+    private AdvisoryResponse callAi(String prompt) {
         try {
-            return objectMapper.readValue(response, AdvisoryResponse.class);
+            return chatClient.prompt()
+                    .user(prompt)
+                    .call()
+                    .entity(AdvisoryResponse.class);
+
         } catch (Exception e) {
-            throw new RuntimeException("Invalid AI JSON response: " + response, e);
+            throw new ResponseStatusException(
+                    HttpStatus.SERVICE_UNAVAILABLE,
+                    "AI advisory service temporarily unavailable"
+            );
+           // throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "AI advisory service temporarily unavailable");
         }
+    }
+
+    private String sanitize(String input) {
+        if (input == null) return "";
+        return input.replaceAll("[^a-zA-Z0-9\\s]", "").trim();
     }
 }

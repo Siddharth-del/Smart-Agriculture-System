@@ -35,6 +35,12 @@ public class CropRecommendation {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "data_id", nullable = false)
+    @JoinColumn(name = "data_id", nullable = true)
     private SensorData sensorData;
+     
+
+    // Add
+    // @ManyToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name="user_id",nullable = false)
+    // private User user;
 }

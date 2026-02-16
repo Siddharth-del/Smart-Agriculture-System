@@ -36,16 +36,17 @@ public class SensorData {
     private Double soilMoisture;
     private Double temperature;
     private Double humidity;
-    
+    private Double ph;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "soil_type_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "soil_type_id", nullable = true)
     private SoilType soilType;
 
 }
