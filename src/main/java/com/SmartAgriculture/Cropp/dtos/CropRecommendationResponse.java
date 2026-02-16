@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Data
 public class CropRecommendationResponse {
-     private Long cropId;
-    private String recommendedCrop;
+      private Long cropId;
+    private String CropName;
     private Double cropConfidence;
     private String explanation;
 }

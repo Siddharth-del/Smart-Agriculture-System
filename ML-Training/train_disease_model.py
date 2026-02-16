@@ -89,10 +89,6 @@ model.fit(
     epochs=epochs,
     callbacks=callbacks
 )
-
-# ========================
-# FINE-TUNING PHASE
-# ========================
 base_model.trainable = True
 
 for layer in base_model.layers[:-20]:

@@ -1,5 +1,8 @@
 package com.SmartAgriculture.Cropp.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +30,7 @@ public class CropRecommendationServiceImpl implements CropRecommendationService 
 
         @Override
         public CropRecommendationResponse recommendCrop(CropRequestDTO request) {
-                
+
                 SensorData sensorData = new SensorData();
                 sensorData.setHumidity(request.getHumidity());
                 sensorData.setNitrogen(request.getNitrogen());
@@ -42,16 +45,38 @@ public class CropRecommendationServiceImpl implements CropRecommendationService 
                 CropRecommendationResponse result = mlPredictionService.predictCrop(sensorData);
 
                 AdvisoryResponse advisory = aiAdvisoryService.generateCropAdvisory(
-                                result.getRecommendedCrop(),
+                                result.getCropName(),
                                 sensorData);
 
                 CropRecommendationResponse response = new CropRecommendationResponse();
 
-                response.setRecommendedCrop(result.getRecommendedCrop());
+                response.setCropName(result.getCropName());
                 response.setCropConfidence(result.getCropConfidence());
                 response.setExplanation(advisory.getExplanation());
 
-             
+                CropRecommendation crop = new CropRecommendation();
+                crop.setCropName(response.getCropName());
+                crop.setExplanation(response.getExplanation());
+                crop.setConfidenceScore(response.getCropConfidence());
+                crop.setCropId(response.getCropId());
+                crop.setSensorData(sensorData);
+                crop.setLocation(request.getLocation());
+                CropRecommendation save = cropRepository.save(crop);
+
+                response.setCropId(save.getCropId());
+
+                return response;
+        }
+
+        @Override
+        public List<CropRecommendationResponse> getCropByName(String name) {
+                List<CropRecommendation> crops = cropRepository.findByCropNameIgnoreCase(name);
+                if (crops.isEmpty()) {
+                        throw new RuntimeException("Crop not Found !");
+                }
+                List<CropRecommendationResponse> response = crops.stream()
+                                .map(crop -> modelMapper.map(crop, CropRecommendationResponse.class))
+                                .collect(Collectors.toList());
 
                 return response;
         }

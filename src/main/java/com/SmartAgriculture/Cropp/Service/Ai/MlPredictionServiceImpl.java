@@ -51,7 +51,7 @@ public class MlPredictionServiceImpl implements MlPredictionService {
             double confidence = ((Number) body.get("confidence")).doubleValue();
 
             CropRecommendationResponse cropResponse = new CropRecommendationResponse();
-            cropResponse.setRecommendedCrop(predictedCrop);
+            cropResponse.setCropName(predictedCrop);
             cropResponse.setCropConfidence(confidence);
 
             return cropResponse;
@@ -60,7 +60,6 @@ public class MlPredictionServiceImpl implements MlPredictionService {
             throw new RuntimeException("ML prediction failed", e);
         }
     }
-
 
     @Override
     public DiseasePredictionResponse detectDisease(File imageFile) {

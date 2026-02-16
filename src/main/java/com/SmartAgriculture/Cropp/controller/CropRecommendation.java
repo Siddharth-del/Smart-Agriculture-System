@@ -1,9 +1,12 @@
 package com.SmartAgriculture.Cropp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,11 @@ public class CropRecommendation {
     public ResponseEntity<CropRecommendationResponse> recommendCrop(@Valid @RequestBody CropRequestDTO request) {
         CropRecommendationResponse response = cropRecommendationService.recommendCrop(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/crop/{cropName}")
+    public ResponseEntity<List<CropRecommendationResponse>> getCropByName(@PathVariable String cropName){
+         List<CropRecommendationResponse> crop = cropRecommendationService.getCropByName(cropName);
+         return new ResponseEntity<>(crop, HttpStatus.OK);
     }
 
 }

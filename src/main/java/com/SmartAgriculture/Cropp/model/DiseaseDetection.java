@@ -1,6 +1,7 @@
 package com.SmartAgriculture.Cropp.model;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,13 +35,13 @@ public class DiseaseDetection {
     private String imagePath;
 
     @Column(nullable = false)
-    private String predictedDisease;
+    private String diseaseName;
 
     @Column(nullable = false)
     private Double confidenceScore;
 
     @Column(columnDefinition = "TEXT")
-    private String pesticideRecommendation;
+    private String pesticideSuggestion;
 
     @Column(columnDefinition = "TEXT")
     private String fertilizerSuggestion;
@@ -58,4 +59,6 @@ public class DiseaseDetection {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+   
 }

@@ -13,11 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiseaseDetectionResponse {
+    private Long diseaseId;
     private List<DiseasePredictionResponse> predicted;
-    private String fertilizerRecommendation;
-    private String pesticideRecommendation;
+    private String fertilizerSuggestion;
+    private String pesticideSuggestion;
 
     private String explanation;
 
-    private LocalDateTime generatedAt;
+    private LocalDateTime createdAt;
 }

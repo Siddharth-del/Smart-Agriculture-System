@@ -26,17 +26,22 @@ public class CropRecommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cropId;
-    private String recommendedCrop;
+    private String cropName;
     private Double confidenceScore;
     @Column(columnDefinition = "TEXT")
     private String explanation;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+    
+    private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "data_id", nullable = true)
     private SensorData sensorData;
+    
+
+
      
 
     // Add

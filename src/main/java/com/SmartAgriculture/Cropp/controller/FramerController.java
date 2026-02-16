@@ -25,4 +25,9 @@ public class FramerController {
     //    CropRecommendationResponse history=cropRecommendationService.getHistory();
     //    return new ResponseEntity<>(history,HttpStatus.OK);
     // }
+
+    // @GetMapping("/crop-recommend")
+    // public CropRecommendationResponse getCrop(){
+    //     CropRecommendationResponse crop=
+    // }
 }
