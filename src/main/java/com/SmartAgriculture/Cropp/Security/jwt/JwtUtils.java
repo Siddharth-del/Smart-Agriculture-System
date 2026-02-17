@@ -2,8 +2,6 @@ package com.SmartAgriculture.Cropp.Security.jwt;
 
 import java.util.Date;
 import java.security.Key;
-import java.util.Base64.Decoder;
-
 import javax.crypto.SecretKey;
 
 import org.slf4j.Logger;

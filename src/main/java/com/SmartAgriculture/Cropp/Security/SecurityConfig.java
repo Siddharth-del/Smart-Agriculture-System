@@ -1,6 +1,5 @@
 package com.SmartAgriculture.Cropp.Security;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,10 +30,11 @@ public class SecurityConfig {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
-  @Bean 
-     public AuthTokenFilter authenticationJwtTokenFilter(){
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
-     }
+    }
+
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -58,31 +58,27 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exception ->
-                    exception.authenticationEntryPoint(unauthorizedHandler)
-            )
-            .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                    .requestMatchers("/images/**").permitAll()
-                    .requestMatchers("/api/farmer/**").hasRole("FARMER")
-                    .requestMatchers("/api/agronomist/**").hasRole("AGRONOMIST")
-                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
-            );
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/ml/**").hasRole("FARMER") // add this
+                        .requestMatchers("/api/disease/**").hasRole("FARMER") // add this
+                        .requestMatchers("/api/ai/**").hasRole("FARMER") // add this
+                        .requestMatchers("/api/framer/**").hasRole("FARMER")
+                        .requestMatchers("/api/agronomist/**").hasRole("AGRONOMIST")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
 
         http.addFilterBefore(
                 authenticationJwtTokenFilter(),
-                UsernamePasswordAuthenticationFilter.class
-        );
+                UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

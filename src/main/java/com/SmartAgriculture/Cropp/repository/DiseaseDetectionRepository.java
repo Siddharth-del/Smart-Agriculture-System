@@ -12,8 +12,7 @@ import com.SmartAgriculture.Cropp.model.DiseaseDetection;
 @Repository
 public interface DiseaseDetectionRepository extends JpaRepository<DiseaseDetection,Long>{
 
-
-    @Query("SELECT d FROM DiseaseDetection d WHERE LOWER(REPLACE(REPLACE(d.diseaseName, '_', ''), ' ', '')) = LOWER(REPLACE(REPLACE(:name, '_', ''), ' ', ''))")
+  @Query("SELECT d FROM DiseaseDetection d WHERE LOWER(REPLACE(REPLACE(d.diseaseName, '_', ''), ' ', '')) = LOWER(REPLACE(REPLACE(:name, '_', ''), ' ', ''))")
 List<DiseaseDetection> findByDiseaseNameIgnoreCase(@Param("name") String name);
 
 

@@ -108,16 +108,7 @@ public class DiseaseDetectionServiceImpl implements DiseaseDetectionService {
                 }
             }
             throw e;
-        } finally {
-            if (savedFile != null && savedFile.exists()) {
-                try {
-                    Files.deleteIfExists(savedFile.toPath());
-                    log.info("Temporary file deleted: {}", savedFile.getName());
-                } catch (IOException e) {
-                    log.warn("Failed to delete temporary file: {}", savedFile.getName(), e);
-                }
-            }
-        }
+        } 
 
     }
 
