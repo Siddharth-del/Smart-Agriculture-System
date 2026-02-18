@@ -66,12 +66,13 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/api/ml/**").hasAnyRole("FARMER","ADMIN")
-                        .requestMatchers("/api/disease/**").hasAnyRole("FARMER","ADMIN")
-                        .requestMatchers("/api/ai/**").hasAnyRole("FARMER","ADMIN")
+                        .requestMatchers("/api/ml/**").hasAnyRole("FARMER", "ADMIN")
+                        .requestMatchers("/api/disease/**").hasAnyRole("FARMER", "ADMIN")
+                        .requestMatchers("/api/ai/**").hasAnyRole("FARMER", "ADMIN")
                         .requestMatchers("/api/farmer/**").hasRole("FARMER")
                         .requestMatchers("/api/agronomist/**").hasRole("AGRONOMIST")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/email/**").permitAll()
                         .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
