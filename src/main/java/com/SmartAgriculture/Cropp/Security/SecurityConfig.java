@@ -66,10 +66,10 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers("/api/ml/**").hasRole("FARMER") // add this
-                        .requestMatchers("/api/disease/**").hasRole("FARMER") // add this
-                        .requestMatchers("/api/ai/**").hasRole("FARMER") // add this
-                        .requestMatchers("/api/framer/**").hasRole("FARMER")
+                        .requestMatchers("/api/ml/**").hasAnyRole("FARMER","ADMIN")
+                        .requestMatchers("/api/disease/**").hasAnyRole("FARMER","ADMIN")
+                        .requestMatchers("/api/ai/**").hasAnyRole("FARMER","ADMIN")
+                        .requestMatchers("/api/farmer/**").hasRole("FARMER")
                         .requestMatchers("/api/agronomist/**").hasRole("AGRONOMIST")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated());

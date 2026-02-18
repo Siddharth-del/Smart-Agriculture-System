@@ -6,14 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +19,6 @@ import com.SmartAgriculture.Cropp.dtos.AdvisoryResponse;
 import com.SmartAgriculture.Cropp.dtos.DiseaseDetectionResponse;
 import com.SmartAgriculture.Cropp.dtos.DiseasePredictionResponse;
 import com.SmartAgriculture.Cropp.model.DiseaseDetection;
-import com.SmartAgriculture.Cropp.model.User;
 import com.SmartAgriculture.Cropp.repository.DiseaseDetectionRepository;
 import com.SmartAgriculture.Cropp.repository.UserRepository;
 
